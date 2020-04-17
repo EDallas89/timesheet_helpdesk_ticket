@@ -1,31 +1,47 @@
 from odoo import models, fields, api
-from odoo.exceptions import UserError
 from datetime import datetime, timedelta, date
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+
 
 class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+    _inherit = ['account.analytic.line']
 
     ticket_id = fields.Many2one(
         comodel_name='helpdesk.ticket',
         string='ticket_id',
     )
-    date_start = fields.Datetime('Start Time')
-    start_stop = fields.Boolean(string='Start Stop', default=False)
-    #date_stop = fields.Datetime('End Time')
 
-    # Definimos la funcionalidad del botón Start
+    start_stop = fields.Boolean(string='Start Stop', default=False)
+    date_start = fields.Datetime('Start Time')
+    date_stop = fields.Datetime('End Time')
+
+    # Escribe la fecha y hora actual en el campo date_start
     @api.multi
     def action_start(self):
-        # Comprobamos si el valor de start_stop es true y si el usuario es el usuario actual
-        # search_count devuelve un entero con el número de condiciones ciertas
-        action_click = self.search_count([('start_stop', '=', True), ('user_id', '=', self.env.user.id)])
-        # Si alguna de las condiciones es cierta devuelve un mensaje de error
-        if action_click <= 0:
-            # Imprime un mensaje en el chatter
-            #message = _("Started by %s.") % (self.env.user.name)
-            #self.message_post(body=message)
-            # Devuelve la fecha actual
-            return self.write({'date_start':fields.datetime.now(), 'start_stop':True})
+        return self.write({'date_start':datetime.now(), 'start_stop':True})
+    
 
-        else: 
-            raise exceptions.UserError('You cannot start multiple Ticket. Another Ticket is already in progress.')
+    # Escribe la fecha y hora actual en el campo date_stop. 
+    # Calcula la diferencia entre date_start y date_stop y la escribe en el campo   unit_amount.
+    # Recalcula las horas totales del ticket sumando los unit_amount
+    @api.multi
+    def action_stop(self):
+        # Comparamos la fecha actual con la fecha de Start, convirtiendola en String
+        datetime_diff = datetime.now() - self.date_start
+        # Convertimos los segundos totales entre Start y Stop en minutos
+        minutes, seconds = divmod(datetime_diff.total_seconds(), 60)
+        # Convertimos los minutos en horas
+        hours, minutes = divmod(minutes, 60)
+        dur_hours = (('%0*d')%(2,hours))
+        dur_minutes = (('%0*d')%(2,minutes*1.677966102))
+        duration = dur_hours+'.'+dur_minutes
+
+        ######################### REVISAR #############################
+        for unit_amount in self:
+            total_hours = total_hours + unit_amount
+
+        return self.write({
+            'start_stop':False, 
+            'date_stop':datetime.now(), 
+            'unit_amount':duration,
+            'total_hours_ticket':total_hours})

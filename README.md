@@ -1,3 +1,6 @@
+ Notas: 
+    El campo account_id es requerido por el sistema... Buscar manera de obviarlo
+
  # Definimos la funcionalidad del botón Stop y calculamos el tiempo total
     @api.multi
     def action_stop(self):
@@ -33,5 +36,8 @@
 
 
 
-Notas: 
-    El campo account_id es requerido por el sistema... Buscar manera de obviarlo
+
+
+    # Imprime un mensaje en el chatter
+        #message = _("Started by %s.") % (self.env.user_id)
+       # self.message_post('Hello again!', subject='Hello', subtype='mail.mt_comment')   ')

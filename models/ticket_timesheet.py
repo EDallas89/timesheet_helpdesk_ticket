@@ -8,3 +8,6 @@ class TicketTimesheet(models.Model):
         inverse_name='ticket_id',
         string='timesheet_ids',
     )
+    
+    ############################ REVISAR ##############################
+    total_hours_ticket = fields.Float(string='Total Hours')
