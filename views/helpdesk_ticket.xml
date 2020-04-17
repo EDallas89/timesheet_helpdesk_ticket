@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+  <record id="mod_helpdesk_ticket_view_form" model="ir.ui.view">
+    <field name="name">mod.helpdesk.ticket.form.view</field>
+    <field name="model">helpdesk.ticket</field>
+    <field name="inherit_id" ref="helpdesk_mgmt.ticket_view_form" />
+    <field name="priority" eval="20" />
+    <field name="arch" type="xml">
+      <xpath expr="//page[@name='description']" position="after">
+        <!-- Creamos la solapa para el Timesheet -->
+        <page string="Timesheets">
+          <!-- timesheet_ids es un campo con la vista embebida de account.analytic.line a través de un O2M-->
+          <field name="timesheet_ids">
+            <!-- Si no habilitamos la opción de editable="bottom" para crear un nuevo registro se crearía una ventana emergente-->
+            <tree editable="bottom">
+              <!-- Estos campos pertenecen a la vista embebida y simplemente seleccionamos los que queremos utilizar-->
+              <field name="account_id"/>
+              <field name="date" widget="date" readonly="1" />
+              <field name="user_id" readonly="1" />
+              <field name="name" />
+
+              <!-- Creamos los campos que necesitamos para las fechas-->
+              <field name="start_stop" invisible="1" />
+
+              <field name="date_start" string="Hora de Inicio" readonly="1" />
+              <button name="action_start" string="Start" type="object" icon="fa-play" attrs="{'invisible': [('start_stop', '=', True)]}" />
+
+              <!--<field name="date_stop" string="Hora de Fin" />
+              <button name="action_stop" string="Stop" type="object" icon="fa-stop" attrs="{'invisible': [('start_stop', '=', False)]}" />-->
+
+              <field name="unit_amount" widget="float_time" string="Duración" />
+            </tree>
+          </field>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</data>

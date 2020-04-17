@@ -1,31 +1,37 @@
-          <field name="timesheet_ids" context="{'default_project_id': project_id}">
-            <tree editable="bottom">
-              <!--<field name="date" />-->
-              <!--required="1"-->
-              <field name="user_id" options="{&quot;no_open&quot;: True}" />
-              <field name="name" />
-              <field name="date_start" />
-              <field name="date_stop" />
-              <field name="unit_amount" string="Duration" sum="Total time" widget="float_time" />
-            </tree>
-          </field>
+ # Definimos la funcionalidad del botón Stop y calculamos el tiempo total
+    @api.multi
+    def action_stop(self):
+        # Comparamos la fecha actual con la fecha de Start, convirtiendola en String
+        datetime_diff = datetime.now() - datetime.strptime(self.date_start, DEFAULT_SERVER_DATETIME_FORMAT)
+        # Convertimos los segundos totales entre Start y Stop en minutos
+        minutes, seconds = divmod(datetime_diff.total_seconds(), 60)
+        # Convertimos los minutos en horas
+        hours, minutes = divmod(minutes, 60)
+        dur_hours = (_('%0*d')%(2,hours))
+        dur_minutes = (_('%0*d')%(2,minutes*1.677966102))
+        duration = dur_hours+'.'+dur_minutes
+
+        # Revisar que no esté cogiendo el nombre del Ticket en lugar de la descripción
+        if not self.running_work_description:
+            raise UserError(_('Please enter work description before stopping task.'))
+
+        self.write({
+            'timesheet_ids': [(0, 0, {
+                'name': self.running_work_description,
+                'user_id': self.env.user.id,
+                'start_stop': False,
+                'date_start': self.date_start,
+                'date_stop': datetime.now(),
+                'unit_amount': float(duration),
+                # Revisar si es necesario especificar el ticket_id
+                #'ticket_id': self.id,
+             })]
+        # Imprime un mensaje en el chatter
+        message = _("Stopped by %s.") % (self.env.user.name)
+        self.message_post(body=mensaje) 
+        return True
 
 
-          #class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
 
-    date_start = fields.Datetime('Start Time')
-    date_stop = fields.Datetime('End Time')
-    ticket_id = fields.Many2one('acs.support.ticket', string="Support Ticket")
-
-
-
-    =================Botones================
-     <xpath expr="//field[@name='number']" position="before">
-        <div class="oe_button_box" name="button_box">
-          <!-- attrs="{'invisible': [('start_stop', '=', True)]}"-->
-          <button name="action_start" string="Start" type="object" class="oe_inline oe_stat_button" icon="fa-play" />
-          <!-- attrs="{'invisible': [('start_stop', '=', False)]}"-->
-          <button name="action_stop" string="Stop" type="object" class="oe_stat_button oe_inline" icon="fa-stop" />
-        </div>
-      </xpath>
+Notas: 
+    El campo account_id es requerido por el sistema... Buscar manera de obviarlo
