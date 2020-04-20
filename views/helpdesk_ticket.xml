@@ -24,11 +24,13 @@
               <field name="date_start" string="Hora de Inicio" readonly="1" />
               <button name="action_start" string="Start" type="object" icon="fa-play" attrs="{'invisible': [('start_stop', '=', True)]}" />
 
-              <field name="date_stop" string="Hora de Fin" />
+              <!--<button name="action_pause" string="Pause" type="object" icon="fa-pause" attrs="{'invisible': [('start_stop', '=', False)]}" /> -->
+
               <button name="action_stop" string="Stop" type="object" icon="fa-stop" attrs="{'invisible': [('start_stop', '=', False)]}" />
+              <field name="date_stop" string="Hora de Fin" readonly="1"/>
 
 
-              <field name="unit_amount" widget="float_time" string="Horas Dedicadas" />
+              <field name="unit_amount" widget="float_time" string="Horas Dedicadas" readonly="1"/>
             </tree>
           </field>
           <!-- REVISAR -->

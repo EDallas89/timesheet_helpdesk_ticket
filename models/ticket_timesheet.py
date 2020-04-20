@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from datetime import datetime
 
 class TicketTimesheet(models.Model):
     _inherit = 'helpdesk.ticket'
@@ -10,4 +11,9 @@ class TicketTimesheet(models.Model):
     )
     
     ############################ REVISAR ##############################
-    total_hours_ticket = fields.Float(string='Total Hours')
+    total_hours_ticket = fields.Datetime(compute='total_hours', store=True, string='Total Hours')
+
+    @api.onchange('unit_amount')
+    def _onchange_unit_amount(self):
+        return 5
+    
