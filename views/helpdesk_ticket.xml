@@ -20,22 +20,22 @@
               <field name="name" />
               <!-- Creamos los campos que necesitamos para las fechas-->
               <field name="start_stop" invisible="1" />
-
+              <!-- Start -->
+              <button name="action_start" string="Start" type="object" icon="fa-play" attrs="{'invisible': ['|',('start_stop', '=', True),('date_stop', '!=', False)]}" />
               <field name="date_start" string="Hora de Inicio" readonly="1" />
-              <button name="action_start" string="Start" type="object" icon="fa-play" attrs="{'invisible': [('start_stop', '=', True)]}" />
-
-              <!--<button name="action_pause" string="Pause" type="object" icon="fa-pause" attrs="{'invisible': [('start_stop', '=', False)]}" /> -->
-
-              <button name="action_stop" string="Stop" type="object" icon="fa-stop" attrs="{'invisible': [('start_stop', '=', False)]}" />
-              <field name="date_stop" string="Hora de Fin" readonly="1"/>
-
-
-              <field name="unit_amount" widget="float_time" string="Horas Dedicadas" readonly="1"/>
+              <!-- Pause -->
+              <field name="date_reboot" invisible="1" />
+              <button name="action_pause" string="Pause" type="object" icon="fa-pause" attrs="{'invisible': ['|',('start_stop', '=', False),('date_stop', '!=', False)]}" />
+              <!-- Stop -->
+              <button name="action_stop" string="Stop" type="object" icon="fa-stop" attrs="{'invisible': ['|',('date_start', '=', False), ('date_stop', '!=', False)]}" />
+              <field name="date_stop" string="Hora de Fin" readonly="1" />
+              <!-- Recuento de Horas por Linea-->
+              <field name="unit_amount" string="Horas Dedicadas" widget="float_time" readonly="1" />
             </tree>
           </field>
           <!-- REVISAR -->
-          <group text-align="right">
-            <field name="total_hours_ticket" widget="float_time" string="Horas Totales" readonly="1"/>
+          <group>
+            <field name="total_hours_ticket" widget="float_time" string="Horas Totales" readonly="1" sum="total" />
           </group>
         </page>
       </xpath>

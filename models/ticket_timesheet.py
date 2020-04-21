@@ -11,9 +11,4 @@ class TicketTimesheet(models.Model):
     )
     
     ############################ REVISAR ##############################
-    total_hours_ticket = fields.Datetime(compute='total_hours', store=True, string='Total Hours')
-
-    @api.onchange('unit_amount')
-    def _onchange_unit_amount(self):
-        return 5
-    
+    total_hours_ticket = fields.Float(string='Total Hours')
