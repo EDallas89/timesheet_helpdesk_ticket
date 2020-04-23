@@ -3,7 +3,7 @@ from datetime import datetime
 import math
 
 class AccountAnalyticLine(models.Model):
-    _inherit = ['account.analytic.line']
+    _inherit = ['account.analytic.line', 'mail.thread', 'mail.activity.mixin']
     _order = 'date_start asc'
 
     ticket_id = fields.Many2one(
@@ -15,6 +15,8 @@ class AccountAnalyticLine(models.Model):
     date_start = fields.Datetime('Start Time')
     date_stop = fields.Datetime('End Time')
     date_reboot = fields.Datetime('Reboot Time')
+    unit = fields.Char(string='Unidad de Medida', default='Horas')
+
 
     # Cambia el valor de start_stop a True y escribe la fecha y hora actual en el campo date_start. Si el campo date_start ya tiene valor no lo modifica.
     @api.multi
@@ -41,14 +43,6 @@ class AccountAnalyticLine(models.Model):
 
         # Convertimos los segundos totales entre Start y Stop en minutos
         minutes, seconds = divmod(datetime_diff.total_seconds(), 60)
-        # ============ REVISAR ==============
-        # Si ya hay un computo de horas y minutos lo convertimos en minutos y se lo sumamos a los minutos del nuevo calculo
-        #unit_amount = self.unit_amount
-        #if (unit_amount!=False):
-        #    hours_amount = unit_amount[1:2]
-#
-        #    minutes_amount = unit_amount[4:5] + (unit_amount[1:2]*60)
-        #    minutes += minutes_amount
                                
         # Convertimos los minutos en horas
         hours, minutes = divmod(minutes, 60)
@@ -76,7 +70,8 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def action_stop(self):
         duration = self.count_time()
-
+        
+        #message_post(self, body="Meh")
         return self.write({
             'start_stop':False, 
             'date_stop':datetime.now(), 
