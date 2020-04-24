@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
-  <record id="mod_helpdesk_ticket_view_form" model="ir.ui.view">
-    <field name="name">mod.helpdesk.ticket.form.view</field>
+  <record id="timesheet_helpdesk_ticket_view_form" model="ir.ui.view">
+    <field name="name">timesheet.helpdesk.ticket.form.view</field>
     <field name="model">helpdesk.ticket</field>
     <field name="inherit_id" ref="helpdesk_mgmt.ticket_view_form" />
     <field name="priority" eval="20" />
@@ -14,7 +14,7 @@
             <!-- Si no habilitamos la opción de editable="bottom" para crear un nuevo registro se crearía una ventana emergente-->
             <tree editable="bottom">
               <!-- Estos campos pertenecen a la vista embebida y simplemente seleccionamos los que queremos utilizar domain="[('partner_id','=','partner_id'))]"-->
-              <field name="account_id"/>
+              <field name="account_id" />
               <field name="date" widget="date" readonly="1" />
               <field name="user_id" readonly="1" />
               <field name="name" />
@@ -27,7 +27,7 @@
               <field name="date_reboot" invisible="1" />
               <button name="action_pause" string="Pause" type="object" icon="fa-pause" attrs="{'invisible': ['|',('start_stop', '=', False),('date_stop', '!=', False)]}" />
               <!-- Stop -->
-              <button name="action_stop" string="Stop" type="object" icon="fa-stop" attrs="{'invisible': ['|',('date_start', '=', False), ('date_stop', '!=', False)]}" confirm="¿Seguro que quiere finalizar esta tarea?"/>
+              <button name="action_stop" string="Stop" type="object" icon="fa-stop" attrs="{'invisible': ['|',('date_start', '=', False), ('date_stop', '!=', False)]}" confirm="¿Seguro que quiere finalizar esta tarea?" />
               <field name="date_stop" string="Hora de Fin" readonly="1" />
               <!-- Recuento de Horas por Linea-->
               <field name="unit_amount" string="Horas Dedicadas" widget="float_time" readonly="1" />
@@ -35,22 +35,22 @@
             <form>
               <group>
                 <group name="ticket" string="Ticket">
-                  <field name="name"/>
-                  <field name="account_id"/>
-                  <field name="date"  />
+                  <field name="name" />
+                  <field name="account_id" />
+                  <field name="date" />
                 </group>
                 <group name="import" string="Importe">
-                  <field name="amount"/>
-                  <field name="unit_amount" widget="float_time"/>
-                  <field name="unit"/>
+                  <field name="amount" />
+                  <field name="unit_amount" widget="float_time" />
+                  <field name="unit" />
                 </group>
               </group>
             </form>
           </field>
-          <!-- REVISAR <group>
-            <field name="total_hours_ticket" widget="float_time" string="Horas Totales" readonly="1" sum="total" />
-          </group>-->
-          
+          <!-- Recuento de Horas del Ticket-->
+          <group class="oe_subtotal_footer oe_right">
+            <field name="total_hours_ticket" widget="float_time" string="Horas Totales" readonly="1"/>
+          </group>
         </page>
       </xpath>
     </field>

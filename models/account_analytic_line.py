@@ -3,18 +3,20 @@ from datetime import datetime
 import math
 
 class AccountAnalyticLine(models.Model):
-    _inherit = ['account.analytic.line', 'mail.thread', 'mail.activity.mixin']
+    _inherit = ['account.analytic.line']
     _order = 'date_start asc'
 
     ticket_id = fields.Many2one(
         comodel_name='helpdesk.ticket',
         string='ticket_id',
     )
-
+    # Campos para la Vista Tree
     start_stop = fields.Boolean(string='Start Stop', default=False)
     date_start = fields.Datetime('Start Time')
     date_stop = fields.Datetime('End Time')
     date_reboot = fields.Datetime('Reboot Time')
+
+    # Campos para la Vista Form
     unit = fields.Char(string='Unidad de Medida', default='Horas')
 
 
@@ -59,6 +61,7 @@ class AccountAnalyticLine(models.Model):
     def action_pause(self):
         duration = self.count_time()
        
+            
         return self.write({
             'start_stop':False,
             'unit_amount':duration,
@@ -70,10 +73,11 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def action_stop(self):
         duration = self.count_time()
-        
-        #message_post(self, body="Meh")
+
         return self.write({
             'start_stop':False, 
             'date_stop':datetime.now(), 
             'unit_amount':duration,
             })
+    
+ 

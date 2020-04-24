@@ -11,8 +11,9 @@ class TicketTimesheet(models.Model):
         string='Timesheet',
     )
 
-    #@api.onchange('partner_id')
-    #def _onchange_partner_id(self):
-    #    partner_id = self.env.partner_id
-    ############################# REVISAR ##############################
-    #total_hours_ticket = fields.Float(string='Total Hours')
+    total_hours_ticket = fields.Float(compute='compute_hours', string='Total Hours')
+
+    @api.depends('timesheet_ids.unit_amount')
+    def compute_hours(self):
+        for task in self:
+            task.total_hours_ticket = sum(task.sudo().timesheet_ids.mapped('unit_amount'))
