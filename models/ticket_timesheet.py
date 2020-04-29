@@ -19,9 +19,17 @@ class TicketTimesheet(models.Model):
         string='Timesheet',
     )
 
-    total_hours_ticket = fields.Float(compute='compute_hours', string='Total Hours')
+    ##### Totales #####
+    total_computed_hours_ticket = fields.Float(computed='compute_hours')
+
+    @api.depends('timesheet_ids.computed_hours')
+    def compute_hours(self):
+        for task in self:
+            task.total_computed_hours_ticket = sum(task.sudo().timesheet_ids.mapped('computed_hours'))
+
+    total_hours_ticket = fields.Float(compute='impute_hours')
 
     @api.depends('timesheet_ids.unit_amount')
-    def compute_hours(self):
+    def impute_hours(self):
         for task in self:
             task.total_hours_ticket = sum(task.sudo().timesheet_ids.mapped('unit_amount'))

@@ -15,10 +15,7 @@ class AccountAnalyticLine(models.Model):
     date_start = fields.Datetime('Start Time')
     date_stop = fields.Datetime('End Time')
     date_reboot = fields.Datetime('Reboot Time')
-
-    # Campos para la Vista Form
-    unit = fields.Char(string='Unidad de Medida', default='Horas')
-
+    computed_hours = fields.Float('Computed Hours')
 
     # Cambia el valor de start_stop a True y escribe la fecha y hora actual en el campo date_start. Si el campo date_start ya tiene valor no lo modifica.
     @api.multi
@@ -60,9 +57,16 @@ class AccountAnalyticLine(models.Model):
     def action_pause(self):
         duration = self.count_time()
 
-        return self.write({
-            'start_stop':False,
+        if (self.unit_amount == self.computed_hours):
+            values = self.write({
+            'start_stop':False, 
+            'computed_hours':duration,
             'unit_amount':duration,
+            })
+        else:
+             values = self.write({
+            'start_stop':False, 
+            'computed_hours':duration,
             })
 
     # Llama a la función count_time. El resultado lo graba en el campo unit_amount.
@@ -71,10 +75,20 @@ class AccountAnalyticLine(models.Model):
     def action_stop(self):
         duration = self.count_time()
 
-        return self.write({
+        if (self.unit_amount == self.computed_hours):
+            values = self.write({
             'start_stop':False, 
             'date_stop':datetime.now(), 
+            'computed_hours':duration,
             'unit_amount':duration,
             })
+        else:
+             values = self.write({
+            'start_stop':False, 
+            'date_stop':datetime.now(), 
+            'computed_hours':duration,
+            })
+
+        return values
+
     
- 

@@ -35,27 +35,30 @@
               <button name="action_stop" string="Stop" type="object" icon="fa-stop" attrs="{'invisible': ['|',('date_start', '=', False), ('date_stop', '!=', False)]}" confirm="¿Seguro que quiere finalizar esta tarea?" />
               <field name="date_stop" string="Hora de Fin" readonly="1" />
               <!-- Recuento de Horas por Linea-->
-              <field name="unit_amount" string="Horas Dedicadas" widget="float_time" readonly="1" />
+              <field name="computed_hours" string="Horas Computadas" widget="float_time" readonly="1" />
+              <field name="unit_amount" string="Horas Imputadas" widget="float_time"/>
             </tree>
-
             <form>
               <group>
                 <group name="ticket" string="Ticket">
-                  <field name="name" />
-                  <field name="account_id" />
+                  <field name="project_id"/>
+                  <field name="task_id" />
                   <field name="date" />
+                  <field name="user_id"/>
+                  <field name="name" />
                 </group>
-                <group name="import" string="Importe">
+                <group name="costs" string="Costes">
+                  <field name="computed_hours" widget="float_time" string="Horas Computadas"/>
+                  <field name="unit_amount" widget="float_time" string="Horas Imputadas"/>
                   <field name="amount" />
-                  <field name="unit_amount" widget="float_time" />
-                  <field name="unit" />
                 </group>
               </group>
             </form>
           </field>
           <!-- Recuento de Horas del Ticket-->
           <group class="oe_subtotal_footer oe_right">
-            <field name="total_hours_ticket" widget="float_time" string="Horas Totales" readonly="1"/>
+            <field name="total_computed_hours_ticket"  widget="float_time" string="Total Horas Computadas" readonly="1"/>
+            <field name="total_hours_ticket" widget="float_time" string="Total Horas Imputadas" readonly="1"/>
           </group>
         </page>
       </xpath>
