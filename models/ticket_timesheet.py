@@ -1,9 +1,17 @@
 from odoo import models, fields, api
-from datetime import datetime
+from odoo.exceptions import ValidationError
 
 class TicketTimesheet(models.Model):
     _inherit = 'helpdesk.ticket'
 
+    project = fields.Many2one(
+        comodel_name = 'project.project',
+        string = 'Project',
+    )
+    task = fields.Many2one(
+        comodel_name = 'project.task',
+        string = 'Task',
+    )
 
     timesheet_ids = fields.One2many(
         comodel_name='account.analytic.line',

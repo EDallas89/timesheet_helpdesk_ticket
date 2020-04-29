@@ -6,15 +6,20 @@
     <field name="inherit_id" ref="helpdesk_mgmt.ticket_view_form" />
     <field name="priority" eval="20" />
     <field name="arch" type="xml">
-      <xpath expr="//page[@name='description']" position="after">
+      <xpath expr="//field[@name='partner_email']" position="after">
+        <field name="project" string="Proyecto"/>
+        <field name="task" string="Tarea" domain="[('project_id', '=', project)]" attrs="{'invisible':[('project', '=', False)]}"/>
+      </xpath>
+      <xpath expr="//page[@name='attachment']" position="replace">
         <!-- Creamos la solapa para el Timesheet -->
         <page string="Timesheets">
           <!-- timesheet_ids es un campo con la vista embebida de account.analytic.line a través de un O2M-->
-          <field name="timesheet_ids">
+          <field name="timesheet_ids" context="{'default_project_id': project,'default_task_id': task}">
             <!-- Si no habilitamos la opción de editable="bottom" para crear un nuevo registro se crearía una ventana emergente-->
-            <tree editable="bottom">
-              <!-- Estos campos pertenecen a la vista embebida y simplemente seleccionamos los que queremos utilizar domain="[('partner_id','=','partner_id'))]"-->
-              <field name="account_id" />
+            <tree editable="bottom" delete="true">
+              <!-- Estos campos pertenecen a la vista embebida y simplemente seleccionamos los que queremos utilizar-->
+              <field name="project_id"/>
+              <field name="task_id" />
               <field name="date" widget="date" readonly="1" />
               <field name="user_id" readonly="1" />
               <field name="name" />
@@ -32,6 +37,7 @@
               <!-- Recuento de Horas por Linea-->
               <field name="unit_amount" string="Horas Dedicadas" widget="float_time" readonly="1" />
             </tree>
+
             <form>
               <group>
                 <group name="ticket" string="Ticket">

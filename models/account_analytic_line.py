@@ -3,7 +3,7 @@ from datetime import datetime
 import math
 
 class AccountAnalyticLine(models.Model):
-    _inherit = ['account.analytic.line']
+    _inherit = 'account.analytic.line'
     _order = 'date_start asc'
 
     ticket_id = fields.Many2one(
@@ -28,8 +28,7 @@ class AccountAnalyticLine(models.Model):
             return self.write({'date_start':datetime.now(), 'start_stop':True})
         else:
             return self.write({'date_pause': datetime.now(), 'start_stop':True})
-        
-        
+                
     # Cuenta las horas y minutos entre dos fechas. Si hay una fecha de reinicio tomará esta, sino utilizará la fecha de inicio
     @api.multi
     def count_time(self):
@@ -60,13 +59,11 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def action_pause(self):
         duration = self.count_time()
-       
-            
+
         return self.write({
             'start_stop':False,
             'unit_amount':duration,
             })
-
 
     # Llama a la función count_time. El resultado lo graba en el campo unit_amount.
     # Pone el campo start_stop en False y graba date_stop.
