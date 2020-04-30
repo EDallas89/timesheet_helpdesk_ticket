@@ -56,7 +56,7 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def action_pause(self):
         duration = self.count_time()
-
+        # Comprueba si el valor de unit_amount es igual a computed_hours, si no es igual (porque ha sido modificado a mano) no modifica el campo.
         if (self.unit_amount == self.computed_hours):
             values = self.write({
             'start_stop':False, 
@@ -74,7 +74,7 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def action_stop(self):
         duration = self.count_time()
-
+        # Comprueba si el valor de unit_amount es igual a computed_hours, si no es igual (porque ha sido modificado a mano) no modifica el campo.
         if (self.unit_amount == self.computed_hours):
             values = self.write({
             'start_stop':False, 

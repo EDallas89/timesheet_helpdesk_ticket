@@ -19,10 +19,10 @@
             <tree editable="bottom" delete="true">
               <!-- Estos campos pertenecen a la vista embebida y simplemente seleccionamos los que queremos utilizar-->
               <field name="project_id"/>
-              <field name="task_id" />
+              <field name="task_id"/>
               <field name="date" widget="date" readonly="1" />
               <field name="user_id" readonly="1" />
-              <field name="name" />
+              <field name="name"/>
               <!-- Creamos los campos que necesitamos para las fechas-->
               <field name="start_stop" invisible="1" />
               <!-- Start -->
@@ -50,14 +50,13 @@
                 <group name="costs" string="Costes">
                   <field name="computed_hours" widget="float_time" string="Horas Computadas"/>
                   <field name="unit_amount" widget="float_time" string="Horas Imputadas"/>
-                  <field name="amount" />
                 </group>
               </group>
             </form>
           </field>
           <!-- Recuento de Horas del Ticket-->
           <group class="oe_subtotal_footer oe_right">
-            <field name="total_computed_hours_ticket"  widget="float_time" string="Total Horas Computadas" readonly="1"/>
+            <!-- <field name="total_computed_hours_ticket"  widget="float_time" string="Total Horas Computadas" readonly="1"/> -->
             <field name="total_hours_ticket" widget="float_time" string="Total Horas Imputadas" readonly="1"/>
           </group>
         </page>

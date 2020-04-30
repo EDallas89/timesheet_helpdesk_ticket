@@ -6,11 +6,12 @@ class TicketTimesheet(models.Model):
 
     project = fields.Many2one(
         comodel_name = 'project.project',
-        string = 'Project',
+        string = 'project_id',
     )
+    
     task = fields.Many2one(
         comodel_name = 'project.task',
-        string = 'Task',
+        string = 'task',
     )
 
     timesheet_ids = fields.One2many(
@@ -19,13 +20,13 @@ class TicketTimesheet(models.Model):
         string='Timesheet',
     )
 
-    ##### Totales #####
-    total_computed_hours_ticket = fields.Float(computed='compute_hours')
-
-    @api.depends('timesheet_ids.computed_hours')
-    def compute_hours(self):
-        for task in self:
-            task.total_computed_hours_ticket = sum(task.sudo().timesheet_ids.mapped('computed_hours'))
+    ##### REVISAR NO FUNCIONA #####
+    #total_computed_hours_ticket = fields.Float(computed='compute_hours')
+#
+    #@api.depends('computed_hours')
+    #def compute_hours(self):
+    #    for task in self:
+    #        task.total_computed_hours_ticket = sum(task.sudo().mapped('computed_hours'))
 
     total_hours_ticket = fields.Float(compute='impute_hours')
 
@@ -33,3 +34,8 @@ class TicketTimesheet(models.Model):
     def impute_hours(self):
         for task in self:
             task.total_hours_ticket = sum(task.sudo().timesheet_ids.mapped('unit_amount'))
+
+    # Si cambia el Proyecto resetea la Tarea
+    @api.onchange('project')
+    def _onchange_project(self):
+        self.task = False
