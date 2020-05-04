@@ -43,6 +43,6 @@ class TicketTimesheet(models.Model):
         for record in self:
             record.total_hours_ticket = sum(record.timesheet_ids.mapped('unit_amount'))
 
-    @api.onchange('project')
+    @api.onchange('project_id')
     def _onchange_project(self):
-        self.task = False
+        self.task_id = False
