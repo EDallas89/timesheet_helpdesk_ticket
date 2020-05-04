@@ -18,15 +18,18 @@ class TicketTimesheet(models.Model):
         inverse_name='ticket_id',
         string='Timesheet',
     )
-    total_computed_hours_ticket = fields.Float(
-        compute='compute_hours',
-        string='Computed Hours'
-    )
     partner_phone = fields.Char(
         string='Contact Phone',
         related='partner_id.mobile',
         store=True,
         readonly=False,
+    )
+    total_computed_hours_ticket = fields.Float(
+        compute='compute_hours',
+        string='Computed Hours'
+    )
+    total_hours_ticket = fields.Float(
+        compute='impute_hours'
     )
 
     def compute_hours(self):
@@ -34,7 +37,6 @@ class TicketTimesheet(models.Model):
             record.total_computed_hours_ticket = \
                 sum(record.mapped('timesheet_ids.computed_hours'))
 
-    total_hours_ticket = fields.Float(compute='impute_hours')
 
     @api.depends('timesheet_ids.unit_amount')
     def impute_hours(self):
