@@ -1,6 +1,4 @@
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError
-
 
 class TicketTimesheet(models.Model):
     _inherit = 'helpdesk.ticket'
@@ -46,3 +44,4 @@ class TicketTimesheet(models.Model):
     @api.onchange('project_id')
     def _onchange_project(self):
         self.task_id = False
+       # self.timesheet_ids = self.project_id.id
